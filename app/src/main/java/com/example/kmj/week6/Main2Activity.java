@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -25,6 +26,9 @@ public class Main2Activity extends AppCompatActivity {
     EditText et5;
     EditText et6;
     RadioGroup rg;
+    RadioButton rb1;
+    RadioButton rb2;
+    RadioButton rb3;
     String Name;
     String Tel;
     String Menu1;
@@ -32,7 +36,7 @@ public class Main2Activity extends AppCompatActivity {
     String Menu3;
     String Homepage;
     String Date;
-    String Category;
+    int Category=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,27 @@ public class Main2Activity extends AppCompatActivity {
         et5=(EditText)findViewById(R.id.Menu3);
         et6=(EditText)findViewById(R.id.Homepage);
         rg=(RadioGroup) findViewById(R.id.RGoup);
+        rb1=(RadioButton)findViewById(R.id.radio1);
+        rb2=(RadioButton)findViewById(R.id.radio2);
+        rb3=(RadioButton)findViewById(R.id.radio3);
+        rb1.setOnClickListener(rbOnClick);
+        rb2.setOnClickListener(rbOnClick);
+        rb3.setOnClickListener(rbOnClick);
     }
+
+    RadioButton.OnClickListener rbOnClick = new RadioButton.OnClickListener(){
+        public void onClick(View v){
+            if (rb1.isChecked()) Category=1;
+            if (rb2.isChecked()) Category=2;
+            if (rb3.isChecked()) Category=3;
+        }
+    };
 
     public void onClick(View v){
         Intent intent = new Intent();
         if (v.getId()==R.id.btnAdd){
             Name=et1.getText().toString();
+            /*
             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -64,17 +83,20 @@ public class Main2Activity extends AppCompatActivity {
                     idx=Integer.parseInt(rb.getTag().toString());
                     switch (idx){
                         case 1:
-                            Category="Chicken";
+                            Category=1;
                             break;
                         case 2:
-                            Category="Pizza";
+                            Category=2;
                             break;
                         case 3:
-                            Category="Hamburger";
+                            Category=3;
                             break;
+                        default:
+                            Category=0;
                     }
                 }
             });
+            */
             Tel=et2.getText().toString();
             Menu1=et3.getText().toString();
             Menu2=et4.getText().toString();
