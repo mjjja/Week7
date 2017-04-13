@@ -1,4 +1,4 @@
-package com.example.kmj.week6;
+package com.example.kmj.week7;
 
 import android.content.Intent;
 import android.icu.text.DateFormat;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.example.kmj.week6.R;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -36,7 +38,7 @@ public class Main2Activity extends AppCompatActivity {
     String Menu3;
     String Homepage;
     String Date;
-    int Category=1;
+    String Category="Chicken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +61,15 @@ public class Main2Activity extends AppCompatActivity {
         rb1.setOnClickListener(rbOnClick);
         rb2.setOnClickListener(rbOnClick);
         rb3.setOnClickListener(rbOnClick);
+        rb1.setChecked(true);
     }
+
 
     RadioButton.OnClickListener rbOnClick = new RadioButton.OnClickListener(){
         public void onClick(View v){
-            if (rb1.isChecked()) Category=1;
-            if (rb2.isChecked()) Category=2;
-            if (rb3.isChecked()) Category=3;
+            if (rb1.isChecked()) Category="Chicken";
+            if (rb2.isChecked()) Category="Pizza";
+            if (rb3.isChecked()) Category="Hamburger";
         }
     };
 
@@ -73,30 +77,6 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = new Intent();
         if (v.getId()==R.id.btnAdd){
             Name=et1.getText().toString();
-            /*
-            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                    RadioButton rb;
-                    int idx;
-                    rb=(RadioButton)findViewById(checkedId);
-                    idx=Integer.parseInt(rb.getTag().toString());
-                    switch (idx){
-                        case 1:
-                            Category=1;
-                            break;
-                        case 2:
-                            Category=2;
-                            break;
-                        case 3:
-                            Category=3;
-                            break;
-                        default:
-                            Category=0;
-                    }
-                }
-            });
-            */
             Tel=et2.getText().toString();
             Menu1=et3.getText().toString();
             Menu2=et4.getText().toString();

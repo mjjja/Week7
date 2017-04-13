@@ -1,4 +1,4 @@
-package com.example.kmj.week6;
+package com.example.kmj.week7;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.kmj.week6.R;
 
 import static com.example.kmj.week6.R.id.Homepage;
 import static com.example.kmj.week6.R.id.Tel;
@@ -25,7 +27,7 @@ public class Main3Activity extends AppCompatActivity {
     ImageView iv;
     Button bt;
     String Name;
-    int Category;
+    String Category;
     String Tel;
     String Menu1;
     String Menu2;
@@ -56,13 +58,13 @@ public class Main3Activity extends AppCompatActivity {
         tv6.setText(Homepage);
         tv7.setText(Date);
         switch (Category){
-            case 1:
+            case "Chicken":
                 iv.setImageResource(R.drawable.chicken);
                 break;
-            case 2:
+            case "Pizza":
                 iv.setImageResource(R.drawable.pizza);
                 break;
-            case 3:
+            case "Hamburger":
                 iv.setImageResource(R.drawable.hamburger);
                 break;
             default:

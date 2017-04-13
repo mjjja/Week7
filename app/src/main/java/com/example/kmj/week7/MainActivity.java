@@ -1,4 +1,4 @@
-package com.example.kmj.week6;
+package com.example.kmj.week7;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,16 +13,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kmj.week6.R;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Data> AL = new ArrayList<>();
-    ArrayAdapter<Data> AA;
+    DataAdapter adapter;
     ListView lv;
-    TextView tv;
     final int _ADD_LIST = 10;
+    Button bt4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,44 +33,20 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
     void init(){
-        tv=(TextView)findViewById(R.id.list);
+        bt4=(Button)findViewById(R.id.bt4);
         setListView();
     }
 
     public void setListView(){
         lv=(ListView)findViewById(R.id.listview);
-        AA=new ArrayAdapter<Data>(this,android.R.layout.simple_list_item_1,AL);
-        lv.setAdapter(AA);
-
+        adapter = new DataAdapter(this,AL);
+        lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(),Main3Activity.class);
                 intent.putExtra("pos",AL.get(position));
                 startActivity(intent);
-            }
-        });
-
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-                final int pos =position;
-                dlg.setTitle("삭제하시겠습니까?")
-                        .setMessage("삭제확인")
-                        .setIcon(R.drawable.potato)
-                        .setPositiveButton("닫기",null)
-                        .setNegativeButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                AL.remove(pos);
-                                AA.notifyDataSetChanged();
-                                tv.setText("맛집 리스트("+AL.size()+")개");
-                                Toast.makeText(getApplicationContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .show();
-                return true;
             }
         });
     }
@@ -77,7 +56,32 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, Main2Activity.class);
             startActivityForResult(intent, _ADD_LIST);
         }
+        if (v.getId()==R.id.bt2) {
+            Collections.sort(AL,nameAsc);
+            adapter.notifyDataSetChanged();
+        }
+        if (v.getId()==R.id.bt3) {
+            Collections.sort(AL,kindAsc);
+            adapter.notifyDataSetChanged();
+        }
+        if (v.getId()==R.id.bt4) {
+            bt4.setText("삭제");
+        }
     }
+
+    Comparator<Data> nameAsc = new Comparator<Data>() {
+        @Override
+        public int compare(Data o1, Data o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
+    Comparator<Data> kindAsc = new Comparator<Data>() {
+        @Override
+        public int compare(Data o1, Data o2) {
+            return o1.getCategory().compareTo(o2.getCategory());
+        }
+    };
 
 
     @Override
@@ -85,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode==RESULT_OK){
             Data dt = data.getParcelableExtra("hereyougo");
             AL.add(dt);
-            AA.notifyDataSetChanged();
-            tv.setText("맛집 리스트("+AL.size()+")개");
+            adapter.notifyDataSetChanged();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
