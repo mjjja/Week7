@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,10 +23,12 @@ public class DataAdapter extends BaseAdapter {
 
     ArrayList<Data> data = new ArrayList<Data>();
     Context context;
+    Boolean Delete=false;
 
-    public DataAdapter(Context context, ArrayList<Data> data){
+    public DataAdapter(Context context, ArrayList<Data> data, Boolean Delete){
         this.context=context;
         this.data=data;
+        this.Delete=Delete;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class DataAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView==null){
             convertView= LayoutInflater.from(context).inflate(R.layout.item,null);
         }
@@ -51,6 +55,23 @@ public class DataAdapter extends BaseAdapter {
         TextView tv1 = (TextView)convertView.findViewById(R.id.ItemName);
         TextView tv2 = (TextView)convertView.findViewById(R.id.ItemTel);
         ImageView iv = (ImageView)convertView.findViewById(R.id.ItemImg);
+        CheckBox cb = (CheckBox)convertView.findViewById(R.id.checkBox);
+
+        if (Delete){
+            cb.setVisibility(View.VISIBLE);
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                        data.get(position).setIsDelete("Yes");
+                    }else{
+                        data.get(position).setIsDelete("No");
+                    }
+                }
+            });
+        }else{
+            cb.setVisibility(View.INVISIBLE);
+        }
 
         Data one = data.get(position);
         tv1.setText(one.getName());
@@ -82,4 +103,9 @@ public class DataAdapter extends BaseAdapter {
             return o1.getTel().compareTo(o2.getTel());
         }
     };
+
+    public void setDelete(Boolean delete) {
+        Delete = delete;
+        notifyDataSetChanged();
+    }
 }

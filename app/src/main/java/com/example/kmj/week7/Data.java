@@ -16,6 +16,7 @@ public class Data implements Parcelable {
     public String Menu3;
     public String Homepage;
     public String Date;
+    public String IsDelete="No";
     public Data (String Name, String Category, String Tel, String Menu1, String Menu2, String Menu3, String Homepage, String Date) {
         this.Name = Name;
         this.Tel = Tel;
@@ -36,6 +37,7 @@ public class Data implements Parcelable {
         Menu3 = in.readString();
         Homepage = in.readString();
         Date = in.readString();
+        IsDelete = in.readString();
     }
 
     public static final Creator<Data> CREATOR = new Creator<Data>() {
@@ -65,6 +67,7 @@ public class Data implements Parcelable {
         dest.writeString(Menu3);
         dest.writeString(Homepage);
         dest.writeString(Date);
+        dest.writeString(IsDelete);
     }
 
     public String getName() {
@@ -129,6 +132,14 @@ public class Data implements Parcelable {
 
     public void setDate(String date) {
         Date = date;
+    }
+
+    public String getIsDelete() {
+        return IsDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        IsDelete = isDelete;
     }
 
     @Override

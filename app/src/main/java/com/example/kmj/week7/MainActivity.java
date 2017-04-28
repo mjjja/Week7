@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +25,13 @@ import java.util.Comparator;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Data> AL = new ArrayList<>();
+    ArrayList<Data> AL2 = new ArrayList<>();
     DataAdapter adapter;
     ListView lv;
     final int _ADD_LIST = 10;
     Button bt4;
+    EditText et;
+    Boolean deletemode=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListView(){
+        et=(EditText)findViewById(R.id.Search);
         lv=(ListView)findViewById(R.id.listview);
-        adapter = new DataAdapter(this,AL);
+        adapter = new DataAdapter(this,AL,false);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -47,6 +54,34 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),Main3Activity.class);
                 intent.putExtra("pos",AL.get(position));
                 startActivity(intent);
+            }
+        });
+
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchtext=et.getText().toString();
+                AL.clear();
+                if (searchtext.equals("")){
+                    AL.addAll(AL2);
+                }else{
+                    for (int i=0;i<AL2.size();i++){
+                        if (AL2.get(i).getName().toUpperCase().contains(searchtext.toUpperCase())){
+                            AL.add(AL2.get(i));
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -65,7 +100,36 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
         if (v.getId()==R.id.bt4) {
-            bt4.setText("삭제");
+            if (deletemode==false){
+                deletemode=true;
+                bt4.setText("삭제");
+                adapter.setDelete(true);
+                adapter.notifyDataSetChanged();
+            }else{
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setMessage("선택한 맛집을 정말 삭제할거에요?")
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                for (int j=AL.size()-1;j>=0;j--){
+                                    if (AL.get(j).getIsDelete()=="Yes"){
+                                        for (int k=AL2.size()-1;k>=0;k--){
+                                            if (AL2.get(k).equals(AL.get(j))) {
+                                                AL2.remove(j);
+                                                break;
+                                            }
+                                        }
+                                        AL.remove(j);
+                                    }
+                                }
+                                deletemode=false;
+                                bt4.setText("선택");
+                                adapter.setDelete(false);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).show();
+            }
         }
     }
 
@@ -88,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode==RESULT_OK){
             Data dt = data.getParcelableExtra("hereyougo");
+            AL2.add(dt);
             AL.add(dt);
             adapter.notifyDataSetChanged();
         }
